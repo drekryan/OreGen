@@ -1,0 +1,5 @@
+name: OreGen
+description: A plugin which replaces Cobble Generation with Ore Generation
+author: Drekryan
+main: com.Drekryan.OreGen.OreGen
+version: 0.1-SNAPSHOT
