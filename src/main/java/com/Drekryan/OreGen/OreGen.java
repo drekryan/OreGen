@@ -13,7 +13,8 @@ public class OreGen extends JavaPlugin {
             consoleSender.sendMessage("[OreGen] Successfully Enabled!");
         }
 
-        getServer().getPluginManager().registerEvents(new BlockListener(), this);
+        //Register Block Listener
+        getServer().getPluginManager().registerEvents(new BlockListener(this), this);
     }
 
     @Override
