@@ -12,6 +12,8 @@ public class OreGen extends JavaPlugin {
         if (consoleSender != null) {
             consoleSender.sendMessage("[OreGen] Successfully Enabled!");
         }
+
+        getServer().getPluginManager().registerEvents(new BlockListener(), this);
     }
 
     @Override
