@@ -35,7 +35,7 @@ public class ConfigManager {
             try {
                 config.load(file);
 
-                if (this.isValid() && isReload) {
+                if (isReload) {
                     this.loadBlockChances();
                     plugin.getBlockListener().updateBlockValues();
                 }
@@ -97,6 +97,7 @@ public class ConfigManager {
     }
 
     public Map<String, Integer> getBlockChances() {
+        this.isValid();
         return this.blockChances;
     }
 
@@ -106,6 +107,10 @@ public class ConfigManager {
         int totalPercent = 0;
         for (String blockName : this.blockChances.keySet()) {
             totalPercent += this.blockChances.get(blockName);
+        }
+
+        if (totalPercent != 100) {
+            this.blockChances = null;
         }
 
         return (totalPercent == 100);

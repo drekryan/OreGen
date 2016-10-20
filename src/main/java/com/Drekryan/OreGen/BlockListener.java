@@ -123,7 +123,6 @@ public class BlockListener implements Listener {
         if (configManager != null) {
             if (!configManager.isValid()) {
                 logHelper.warning("Config values did not equal 100%! Reverting to vanilla generation...");
-                this.blockChances = null;
             }
 
             this.blockChances = configManager.getBlockChances();
