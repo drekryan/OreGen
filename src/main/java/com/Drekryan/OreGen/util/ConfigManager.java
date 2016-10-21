@@ -12,7 +12,7 @@ import java.util.Set;
 public class ConfigManager {
     private OreGen plugin;
     private FileConfiguration config;
-    private Map<String, Integer> blockChances;
+    private Map<String, Double> blockChances;
     private static final String CONFIG_VERSION = "0.1";
 
     public ConfigManager(OreGen plugin) {
@@ -84,7 +84,7 @@ public class ConfigManager {
         Set<String> keys = blockChancesSection.getKeys(false);
 
         for(String key : keys) {
-            int value = blockChancesSection.getInt(key);
+            double value = blockChancesSection.getDouble(key);
             if (key != null) {
                 System.out.println("[OreGen] Loaded: " + key + " | " + value);
                 this.blockChances.put(key, value);
@@ -93,10 +93,11 @@ public class ConfigManager {
             }
         }
 
+        MapUtil.sortByValue(this.blockChances);
         return true;
     }
 
-    public Map<String, Integer> getBlockChances() {
+    public Map<String, Double> getBlockChances() {
         this.isValid();
         return this.blockChances;
     }
@@ -104,7 +105,7 @@ public class ConfigManager {
     public boolean isValid() {
         if (!configExists() || this.blockChances == null) return false;
 
-        int totalPercent = 0;
+        double totalPercent = 0;
         for (String blockName : this.blockChances.keySet()) {
             totalPercent += this.blockChances.get(blockName);
         }

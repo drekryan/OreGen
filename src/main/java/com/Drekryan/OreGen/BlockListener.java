@@ -2,6 +2,7 @@ package com.Drekryan.OreGen;
 
 import com.Drekryan.OreGen.util.ConfigManager;
 import com.Drekryan.OreGen.util.LogHelper;
+import com.Drekryan.OreGen.util.MapUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -11,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 
-import java.util.Map;
+import java.util.*;
 
 class OreDefinition {
     boolean shouldGenerate;
@@ -27,12 +28,14 @@ public class BlockListener implements Listener {
     private OreGen plugin;
     private ConfigManager configManager;
     private LogHelper logHelper;
-    private Map<String, Integer> blockChances;
+    private Random randomGenerator;
+    private Map<String, Double> blockChances;
 
     BlockListener(OreGen plugin) {
         this.plugin = plugin;
         this.configManager = plugin.getConfigManager();
         this.logHelper = plugin.getLogHelper();
+        this.randomGenerator = new Random();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
 
         ConfigManager configManager = this.plugin.getConfigManager();
@@ -59,19 +62,25 @@ public class BlockListener implements Listener {
             if (configManager.isDebug())
                 logHelper.info("Ore Location: " + oreLocation.toString());
 
-            //TODO: Improve chance system
-            int roll = (int) Math.floor(Math.random() * 100);
+            double roll = randomGenerator.nextDouble() * 100;
+            double lastMaxRange = 0.0f;
             String spawnBlock = "COBBLESTONE";
 
             if (configManager.isDebug())
                 logHelper.info("Picking from " + blockChances.keySet().size() + " values...");
 
             for (String blockName : blockChances.keySet()) {
-                int chance = blockChances.get(blockName);
+                if (!blockName.equals("")) {
+                    double chance = blockChances.get(blockName);
+                    lastMaxRange += chance;
 
-                if (roll < chance) {
-                    spawnBlock = blockName;
-                    break;
+                    if (lastMaxRange > 100)
+                        lastMaxRange = 100;
+
+                    if (roll <= lastMaxRange) {
+                        spawnBlock = blockName;
+                        break;
+                    }
                 }
             }
 
@@ -126,6 +135,7 @@ public class BlockListener implements Listener {
             }
 
             this.blockChances = configManager.getBlockChances();
+            MapUtil.sortByValue(this.blockChances);
         }
     }
 }
