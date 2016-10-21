@@ -61,7 +61,7 @@ public class BlockListener implements Listener {
 
             //TODO: Improve chance system
             int roll = (int) Math.floor(Math.random() * 100);
-            String spawnBlock = "";
+            String spawnBlock = "COBBLESTONE";
 
             if (configManager.isDebug())
                 logHelper.info("Picking from " + blockChances.keySet().size() + " values...");
